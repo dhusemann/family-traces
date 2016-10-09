@@ -77,7 +77,7 @@ namespace Family_Traces
                 if (individualDS.Tables[0].Rows.Count > 0)
                 {
                     int parentFamilyId = (int)(individualDS.Tables[0].Rows[0]["ParentFamilyId"]);
-                    Individual individual = new Individual(individualId, individualDS.Tables[0].Rows[0]["Firstname"].ToString(), individualDS.Tables[0].Rows[0]["Surname"].ToString(), individualDS.Tables[0].Rows[0]["Gender"].ToString(), individualDS.Tables[0].Rows[0]["BornDate"].ToString(), individualDS.Tables[0].Rows[0]["BornPlace"].ToString(), individualDS.Tables[0].Rows[0]["DiedDate"].ToString(), individualDS.Tables[0].Rows[0]["DiedPlace"].ToString(), parentFamilyId);
+                    Individualg individual = new Individualg(individualId, individualDS.Tables[0].Rows[0]["Firstname"].ToString(), individualDS.Tables[0].Rows[0]["Surname"].ToString(), individualDS.Tables[0].Rows[0]["Gender"].ToString(), individualDS.Tables[0].Rows[0]["BornDate"].ToString(), individualDS.Tables[0].Rows[0]["BornPlace"].ToString(), individualDS.Tables[0].Rows[0]["DiedDate"].ToString(), individualDS.Tables[0].Rows[0]["DiedPlace"].ToString(), parentFamilyId);
                     descendantList[depth].Add(individual);
 
                     if (depth < MaxDepth)
@@ -88,7 +88,7 @@ namespace Family_Traces
 
                             int husbandId = (int)(familyDS.Tables[0].Rows[i]["HusbandId"]);
                             int wifeId = (int)(familyDS.Tables[0].Rows[i]["WifeId"]);
-                            Family family = new Family(familyId, husbandId, wifeId, familyDS.Tables[0].Rows[i]["MarriageDate"].ToString(), familyDS.Tables[0].Rows[i]["MarriagePlace"].ToString());
+                            Familyg family = new Familyg(familyId, husbandId, wifeId, familyDS.Tables[0].Rows[i]["MarriageDate"].ToString(), familyDS.Tables[0].Rows[i]["MarriagePlace"].ToString());
                             descendantFamilyList[depth].Add(family);
 
                             DataSet familyChildrenDS = dbAccess.GetFamilyChildren(familyId);

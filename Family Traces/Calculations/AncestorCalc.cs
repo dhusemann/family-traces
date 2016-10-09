@@ -6,7 +6,7 @@ using System.Data.OleDb;
 
 namespace Family_Traces
 {
-    public struct Individual
+    public struct Individualg
     {
         public int Id;
         public string Firstname;
@@ -18,7 +18,7 @@ namespace Family_Traces
         public string DiedPlace;
         public int ParentFamilyId;
 
-        public Individual(int id, string firstname, string surname, string gender, string birthDate, string birthPlace, string diedDate, string diedPlace, int parentFamilyId)
+        public Individualg(int id, string firstname, string surname, string gender, string birthDate, string birthPlace, string diedDate, string diedPlace, int parentFamilyId)
         {
             Id = id;
             Firstname = firstname;
@@ -32,7 +32,7 @@ namespace Family_Traces
         }
     }
 
-    public struct Family
+    public struct Familyg
     {
         public int Id;
         public int HusbandId;
@@ -40,7 +40,7 @@ namespace Family_Traces
         public string MarriageDate;
         public string MarriagePlace;
 
-        public Family(int id, int husbandId, int wifeId, string marriageDate, string marriagePlace)
+        public Familyg(int id, int husbandId, int wifeId, string marriageDate, string marriagePlace)
         {
             Id = id;
             HusbandId = husbandId;
@@ -121,7 +121,7 @@ namespace Family_Traces
                 if (individualDS.Tables[0].Rows.Count > 0)
                 {
                     int parentFamilyId = (int)(individualDS.Tables[0].Rows[0]["ParentFamilyId"]);
-                    Individual individual = new Individual(individualId, individualDS.Tables[0].Rows[0]["Firstname"].ToString(), individualDS.Tables[0].Rows[0]["Surname"].ToString(), individualDS.Tables[0].Rows[0]["Gender"].ToString(), individualDS.Tables[0].Rows[0]["BornDate"].ToString(), individualDS.Tables[0].Rows[0]["BornPlace"].ToString(), individualDS.Tables[0].Rows[0]["DiedDate"].ToString(), individualDS.Tables[0].Rows[0]["DiedPlace"].ToString(), parentFamilyId);
+                    Individualg individual = new Individualg(individualId, individualDS.Tables[0].Rows[0]["Firstname"].ToString(), individualDS.Tables[0].Rows[0]["Surname"].ToString(), individualDS.Tables[0].Rows[0]["Gender"].ToString(), individualDS.Tables[0].Rows[0]["BornDate"].ToString(), individualDS.Tables[0].Rows[0]["BornPlace"].ToString(), individualDS.Tables[0].Rows[0]["DiedDate"].ToString(), individualDS.Tables[0].Rows[0]["DiedPlace"].ToString(), parentFamilyId);
                     ancestryList[depth].Add(individual);
 
                     if (depth < MaxDepth)
@@ -131,7 +131,7 @@ namespace Family_Traces
                         {
                             int husbandId = (int)(familyDS.Tables[0].Rows[0]["HusbandId"]);
                             int wifeId = (int)(familyDS.Tables[0].Rows[0]["WifeId"]);
-                            Family family = new Family(parentFamilyId, husbandId, wifeId, familyDS.Tables[0].Rows[0]["MarriageDate"].ToString(), familyDS.Tables[0].Rows[0]["MarriagePlace"].ToString());
+                            Familyg family = new Familyg(parentFamilyId, husbandId, wifeId, familyDS.Tables[0].Rows[0]["MarriageDate"].ToString(), familyDS.Tables[0].Rows[0]["MarriagePlace"].ToString());
                             ancestryFamilyList[depth].Add(family);
                             if (husbandId != -1)
                             {

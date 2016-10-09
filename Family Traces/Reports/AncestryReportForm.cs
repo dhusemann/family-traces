@@ -34,7 +34,7 @@ namespace Family_Traces
             ancestorCalculation = new AncestorCalc(MaxDepth);
             ancestorCalculation.CalculateAncestors(IndividualId, UniqueAncestors);
             report.Clear();
-            Individual individual = new Individual();
+            Individualg individual = new Individualg();
 
             StringBuilder reportText = new StringBuilder();
 
@@ -44,7 +44,7 @@ namespace Family_Traces
                 reportText.AppendLine("----------------");
                 for(int j = 0; j < ancestorCalculation.ancestryList[i].Count; j++)
                 {
-                    individual = (Individual)(ancestorCalculation.ancestryList[i][j]);
+                    individual = (Individualg)(ancestorCalculation.ancestryList[i][j]);
                    
 
                     reportText.AppendLine(GenValidation.GetNameWithDates(individual.Surname, individual.Firstname, individual.BirthDate, individual.DiedDate));

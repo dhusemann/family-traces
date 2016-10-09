@@ -5,37 +5,33 @@ using System.Text;
 using System.Linq;
 using System.Data.Linq;
 using System.IO;
+using GedcomLib;
 
 namespace Family_Traces
 {
     public class AncestorList
     {
         public int MaxDepth = 255;
-        public int GreatestDepth = 0;
         public int GenerationCount = 0;
         public int IndividualCount = 0;
         private Dictionary<string, GedcomIndividual> gedcomIndividuals;
         private Dictionary<string, GedcomFamily> gedcomFamilies;
         private Dictionary<string, AncestorIndividual> ancestors;
 
-        public void CalcAncestorList(string initialIndividualId, Dictionary<string, GedcomIndividual> gedcomIndividuals, Dictionary<string, GedcomFamily> gedcomFamilies, string outputFile)
+        public void CalcAncestorList(string initialIndividualId, Dictionary<string, GedcomIndividual> gedcomIndividuals, Dictionary<string, GedcomFamily> gedcomFamilies, bool oneLinePerPerson, string outputFile)
         {
             this.ancestors = new Dictionary<string, AncestorIndividual>();
             this.gedcomFamilies = gedcomFamilies;
             this.gedcomIndividuals = gedcomIndividuals;
-            GreatestDepth = 0;
-            GenerateAncestorList(initialIndividualId, "", 0);
-            OutputToWord(1, outputFile);
+            GenerateAncestorList(initialIndividualId, string.Empty, string.Empty, 0);
+            OutputToFile(1, oneLinePerPerson, outputFile);
         }
 
-        private void GenerateAncestorList(string individualId, string spouseId, int depth)
+        private void GenerateAncestorList(string individualId, string spouseId, string childId, int depth)
         {
-            if (depth > GreatestDepth)
-                GreatestDepth = depth;
-
             if (ancestors.ContainsKey(individualId))
             {
-                IncrementAppearance(individualId, depth);
+                IncrementAppearance(individualId, childId, depth);
             }
             else
             {
@@ -49,8 +45,12 @@ namespace Family_Traces
                 individual.Sex = gedcomIndividual.Sex.Trim();
                 individual.BirthDate = gedcomIndividual.BirthDate.Trim();
                 individual.DiedDate = gedcomIndividual.DiedDate.Trim();
-                individual.appearanceCount = 1;
-                individual.lowestGeneration = depth;
+                individual.AppearanceCount = 1;
+                individual.LowestGeneration = depth;
+                individual.HighestGeneration = depth;
+
+                if (!string.IsNullOrEmpty(childId))
+                    individual.ChildrenIds.Add(childId);
 
                 GedcomFamily? gedcomFamily = gedcomFamilies.FirstOrDefault(x => x.Value.Children.Contains(individualId)).Value;
                 if (gedcomFamily != null)
@@ -64,59 +64,69 @@ namespace Family_Traces
                 if (depth <= MaxDepth)
                 {
                     if (!string.IsNullOrEmpty(individual.FatherId))
-                        GenerateAncestorList(individual.FatherId, individual.MotherId, depth + 1);
+                        GenerateAncestorList(individual.FatherId, individual.MotherId, individualId, depth + 1);
 
                     if (!string.IsNullOrEmpty(individual.MotherId))
-                        GenerateAncestorList(individual.MotherId, individual.FatherId, depth + 1);
+                        GenerateAncestorList(individual.MotherId, individual.FatherId, individualId, depth + 1);
                 }
             }
         }
 
-        private void IncrementAppearance(string individualId, int depth)
+        private void IncrementAppearance(string individualId, string childId, int depth)
         {
             if (ancestors.ContainsKey(individualId))
             {
                 AncestorIndividual individual = ancestors[individualId];
-                if (depth < individual.lowestGeneration)
-                    individual.lowestGeneration = depth;
-                individual.appearanceCount++;
+                individual.LowestGeneration = Math.Min(individual.LowestGeneration, depth);
+                individual.HighestGeneration = Math.Min(individual.HighestGeneration, depth);
+                individual.AppearanceCount++;
+
+                if (!string.IsNullOrEmpty(childId))
+                    individual.ChildrenIds.Add(childId);
+
                 ancestors[individualId] = individual;
 
                 if (!string.IsNullOrEmpty(individual.FatherId))
-                    IncrementAppearance(individual.FatherId, depth + 1);
+                    IncrementAppearance(individual.FatherId, individualId, depth + 1);
 
                 if (!string.IsNullOrEmpty(individual.MotherId))
-                    IncrementAppearance(individual.MotherId, depth + 1);
+                    IncrementAppearance(individual.MotherId, individualId, depth + 1);
 
             }
         }
 
 
-        private void OutputToWord(int startingDepth, string outputFile)
+        private void OutputToFile(int startingDepth, bool oneLinePerPerson, string outputFile)
         {
 			StreamWriter writer = new StreamWriter(outputFile);
 
 
-                long total = 0;
-                long unique = 0;
-                for (var depth = startingDepth; depth <= GreatestDepth; depth++)
+            long total = 0;
+            long unique = 0;
+            for (var depth = startingDepth; depth <= ancestors.Max(x => x.Value.LowestGeneration); depth++)
+            {
+                writer.WriteLine();
+
+				writer.WriteLine(string.Format("Generation {0} - {1}", depth, GetGenerationHeading(depth)));
+
+
+                IEnumerable<KeyValuePair<string, AncestorIndividual>> individuals = ancestors.Where(x => x.Value.LowestGeneration == depth);
+                foreach (KeyValuePair<string, AncestorIndividual> individual in individuals)
                 {
-					writer.WriteLine(string.Format("Generation {0} - {1}", depth, GetGenerationHeading(depth)));
-
-
-                    IEnumerable<KeyValuePair<string, AncestorIndividual>> individuals = ancestors.Where(x => x.Value.lowestGeneration == depth);
-                    foreach (KeyValuePair<string, AncestorIndividual> individual in individuals)
-                    {
-                        total += individual.Value.appearanceCount;
-                        unique++;
+                    total += individual.Value.AppearanceCount;
+                    unique++;
+                    if (oneLinePerPerson)
+                        OutputIndividualTextOneLine(individual.Value.Id, writer);
+                    else
                         OutputIndividualText(individual.Value.Id, individual.Value.SpouseId, writer);
-                    }
-      
                 }
-			writer.Flush();
+            }
+            writer.WriteLine();
+            writer.WriteLine(string.Format("Total unique ancestors: {0}", unique));
+            writer.WriteLine(string.Format("Total non-unique ancestors: {0}", total));
+
+            writer.Flush();
 			writer.Close();
-            
-            
         }
 
         private void OutputIndividualText(string individualId, string spouseId, StreamWriter writer)
@@ -153,6 +163,30 @@ namespace Family_Traces
 			writer.WriteLine();
         }
 
+        private void OutputIndividualTextOneLine(string individualId, StreamWriter writer)
+        {
+
+            AncestorIndividual individual = ancestors[individualId];
+
+            writer.WriteLine(string.Format("{0} ({2} occurences)", GenerateFullName(individual, true), GenerateBirthDeathDate(individual), individual.AppearanceCount));
+        }
+
+        public string GenerateBirthDeathDate(AncestorIndividual individual)
+        {
+            string born = ProcessDate(individual.BirthDate);
+            string died = ProcessDate(individual.DiedDate);
+            if (born != "?" || died != "?")
+            {
+                if (born == "?")
+                    return string.Format("(d.{0})", died);
+                else if (died == "?")
+                    return string.Format("(b.{0})", born);
+                else
+                    return string.Format("(b.{0}, d.{1})", born, died);
+            }
+            return string.Empty;
+        }
+
         public string GenerateFullName(AncestorIndividual individual, bool SurnameFirst)
         {
 
@@ -177,17 +211,7 @@ namespace Family_Traces
 				}
 			}
 
-			string born = ProcessDate(individual.BirthDate);
-            string died = ProcessDate(individual.DiedDate);
-            if (born != "?" || died != "?")
-            {
-                if (born == "?")
-                    name = name + string.Format(" (d.{0})", died);
-                else if (died == "?")
-                    name = name + string.Format(" (b.{0})", born);
-                else
-                    name = name + string.Format(" (b.{0}, d.{1})", born, died);
-            }    
+            name = name + " " + GenerateBirthDeathDate(individual);
             name = name.Replace("  ", " ").Replace("  ", " ");
             return name;
         }

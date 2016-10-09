@@ -4,13 +4,14 @@ using System.Collections;
 using System.Text;
 using System.Data;
 using System.IO;
+using GedcomLib;
 
 namespace Family_Traces
 {
     public class GedcomExporter
     {
-        public ArrayList gedcomIndividuals = new ArrayList();
-        public ArrayList gedcomFamilies = new ArrayList();
+        public List<GedcomIndividual> gedcomIndividuals = new List<GedcomIndividual>();
+        public List<GedcomFamily> gedcomFamilies = new List<GedcomFamily>();
         public GedcomHeader gedcomHeader = new GedcomHeader();
         public GedcomExporter()
         {

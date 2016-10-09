@@ -3,18 +3,20 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 
-namespace Family_Traces
+namespace GedcomLib
 {
-    public class GedcomParserHashtable
+    public class GedcomParser
     {
         public GedcomHeader gedcomHeader = new GedcomHeader();
         public Dictionary<string, GedcomIndividual> gedcomIndividuals = new Dictionary<string, GedcomIndividual>();
         public Dictionary<string, GedcomFamily> gedcomFamilies = new Dictionary<string, GedcomFamily>();
         public Dictionary<string, GedcomNote> gedcomNotes = new Dictionary<string, GedcomNote>();
+        public Dictionary<string, GedcomSource> gedcomSources = new Dictionary<string, GedcomSource>();
 
         private GedcomIndividual currentGedcomIndividual;
         private GedcomFamily currentGedcomFamily;
         private GedcomNote currentGedcomNote;
+        private GedcomSource currentGedcomSource;
         private GedcomRecordEnum currentRecord = GedcomRecordEnum.None;
         private GedcomSubRecordEnum currentSubRecord = GedcomSubRecordEnum.None;
 
@@ -62,6 +64,10 @@ namespace Family_Traces
                     if (!gedcomNotes.ContainsKey(currentGedcomNote.Id))
                         gedcomNotes.Add(currentGedcomNote.Id, currentGedcomNote);
                     break;
+                case GedcomRecordEnum.Source:
+                    if (!gedcomSources.ContainsKey(currentGedcomSource.Id))
+                        gedcomSources.Add(currentGedcomSource.Id, currentGedcomSource);
+                    break;
             }
 
             if (lineArray[1] == "HEAD")
@@ -69,7 +75,7 @@ namespace Family_Traces
                     currentRecord = GedcomRecordEnum.Header;
                     currentSubRecord = GedcomSubRecordEnum.None;
             } else if (lineArray[1].IndexOf("@") >= 0) {
-                switch (lineArray[2])
+                switch (lineArray[2].Substring(0, 4))
                 {
                     case "INDI":
                         currentRecord = GedcomRecordEnum.Individual;
@@ -84,6 +90,11 @@ namespace Family_Traces
                     case "NOTE":
                         currentRecord = GedcomRecordEnum.Note;
                         currentGedcomNote = new GedcomNote(lineArray[1]);
+                        currentSubRecord = GedcomSubRecordEnum.None;
+                        break;
+                    case "SOUR":
+                        currentRecord = GedcomRecordEnum.Source;
+                        currentGedcomSource = new GedcomSource(lineArray[1]);
                         currentSubRecord = GedcomSubRecordEnum.None;
                         break;
                 }
@@ -155,6 +166,10 @@ namespace Family_Traces
                         currentGedcomIndividual.Notes.Add(lineArray[2]);
                         currentSubRecord = GedcomSubRecordEnum.None;
                         break;
+                    case "SOUR":
+                        currentGedcomIndividual.Sources.Add(lineArray[2]);
+                        currentSubRecord = GedcomSubRecordEnum.None;
+                        break;
                 }
             }
             else if (currentRecord == GedcomRecordEnum.Family)
@@ -180,6 +195,10 @@ namespace Family_Traces
                         currentGedcomFamily.Notes.Add(lineArray[2]);
                         currentSubRecord = GedcomSubRecordEnum.None;
                         break;
+                    case "SOUR":
+                        currentGedcomFamily.Sources.Add(lineArray[2]);
+                        currentSubRecord = GedcomSubRecordEnum.None;
+                        break;
                 }
             }
             else if (currentRecord == GedcomRecordEnum.Note)
@@ -192,6 +211,20 @@ namespace Family_Traces
                         break;
                     case "CONT":
                         currentGedcomNote.Text += lineArray[2];
+                        currentSubRecord = GedcomSubRecordEnum.None;
+                        break;
+                }
+            }
+            else if (currentRecord == GedcomRecordEnum.Source)
+            {
+                switch (lineArray[1])
+                {
+                    case "TITL":
+                        currentGedcomSource.Text = lineArray[2];
+                        currentSubRecord = GedcomSubRecordEnum.None;
+                        break;
+                    case "CONT":
+                        currentGedcomSource.Text += lineArray[2];
                         currentSubRecord = GedcomSubRecordEnum.None;
                         break;
                 }

@@ -2,77 +2,71 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Text;
+using GedcomLib;
+using Family_Traces.Database;
+using Family_Traces.Models;
+using System.Linq;
 
 namespace Family_Traces
 {
     public class GedcomImporter
     {
-        public static void Import(ArrayList gedcomIndividuals, ArrayList gedcomFamilies)
+        public static void Import(GedcomParser gedcomParser)
         {
             Hashtable individualIdMapper = new Hashtable();
-            GedcomFamily currentGedcomFamily;
-            GedcomIndividual currentGedcomIndividual;
-            DBAccess dbAccess = new DBAccess();
-            int individualId;
-            int familyId, husbandId, wifeId, childId;
-            int i;
-            dbAccess.Open();
 
-            for (i = 0; i < gedcomIndividuals.Count; i++)
+            using (var ctx = new FamilyTracesContext())
             {
-                currentGedcomIndividual = (GedcomIndividual)(gedcomIndividuals[i]);
+                ctx.Families.RemoveRange(ctx.Families);
+                ctx.Individuals.RemoveRange(ctx.Individuals);
+                ctx.Sources.RemoveRange(ctx.Sources);
+                ctx.Notes.RemoveRange(ctx.Notes);
+                ctx.SaveChanges();
 
-                individualId = dbAccess.InsertIndividual(currentGedcomIndividual.Surname.Trim() + " " + currentGedcomIndividual.Suffix.Trim(), currentGedcomIndividual.GivenName.Trim(), currentGedcomIndividual.BirthDate.Trim(), currentGedcomIndividual.BirthPlace.Trim(), currentGedcomIndividual.DiedDate.Trim(), currentGedcomIndividual.DiedPlace.Trim(), -1, currentGedcomIndividual.Sex.Trim());
-                individualIdMapper.Add(currentGedcomIndividual.Id, individualId);
+                foreach(GedcomNote gedcomNote in gedcomParser.gedcomNotes.Values)
+                {
+                    ctx.Notes.Add(new Note() {
+                                            Id = gedcomNote.Id,
+                                            Text = gedcomNote.Text
+                                        });
+
+                }
+
+                foreach (GedcomSource gedcomSource in gedcomParser.gedcomSources.Values)
+                {
+                    ctx.Sources.Add(new Source()
+                    {
+                        Id = gedcomSource.Id,
+                        Text = gedcomSource.Text
+                    });
+
+                }
+
+                foreach (GedcomIndividual gedcomIndividual in gedcomParser.gedcomIndividuals.Values.Take(20))
+                {
+                    ctx.Individuals.Add(new Individual()
+                    {
+                        Id = gedcomIndividual.Id,
+                        GivenName = gedcomIndividual.GivenName,
+                        BirthDate = gedcomIndividual.BirthDate,
+                        BirthPlace = gedcomIndividual.BirthPlace,
+                        Description = gedcomIndividual.Description,
+                        DiedCause = gedcomIndividual.DiedCause,
+                        DiedDate = gedcomIndividual.DiedDate,
+                        DiedPlace = gedcomIndividual.DiedPlace,
+                        Gender = Enums.Gender.Male,
+                        Nationality = gedcomIndividual.Nationality,
+                        Occupation = gedcomIndividual.Occupation,
+                        Prefix = gedcomIndividual.Prefix,
+                        Suffix = gedcomIndividual.Suffix,
+                        Surname = gedcomIndividual.Surname
+                        
+                    });
+
+                }
+                ctx.SaveChanges();
+
             }
-
-            for (i = 0; i < gedcomFamilies.Count; i++)
-            {
-                currentGedcomFamily = (GedcomFamily)(gedcomFamilies[i]);
-                if (currentGedcomFamily.HusbandId.Trim() == "")
-                {
-                    husbandId = -1;
-                }
-                else
-                {
-                    if (individualIdMapper.ContainsKey(currentGedcomFamily.HusbandId))
-                    {
-                        husbandId = (int)(individualIdMapper[currentGedcomFamily.HusbandId]);
-                    }
-                    else
-                    {
-                        husbandId = -1;
-                    }
-                }
-
-                if (currentGedcomFamily.WifeId.Trim() == "")
-                {
-                    wifeId = -1;
-                }
-                else
-                {
-                    if (individualIdMapper.ContainsKey(currentGedcomFamily.WifeId))
-                    {
-                        wifeId = (int)(individualIdMapper[currentGedcomFamily.WifeId]);
-                    }
-                    else
-                    {
-                        wifeId = -1;
-                    }
-                }
-
-                familyId = dbAccess.InsertFamily(husbandId, wifeId, currentGedcomFamily.MarriageDate.Trim(), currentGedcomFamily.MarriagePlace.Trim());
-                for (int j = 0; j < currentGedcomFamily.Children.Count; j++)
-                {
-                    if (individualIdMapper.ContainsKey(currentGedcomFamily.Children[j].ToString()))
-                    {
-                        childId = (int)(individualIdMapper[currentGedcomFamily.Children[j].ToString()]);
-                        dbAccess.UpdateIndividualPArentFamilyId(childId, familyId);
-                    }
-                }
-            }
-
-            dbAccess.Close();
         }
     }
 }

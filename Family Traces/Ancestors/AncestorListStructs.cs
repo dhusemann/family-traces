@@ -19,8 +19,10 @@ namespace Family_Traces
         public string FatherId;
         public string MotherId;
         public string SpouseId;
-        public int lowestGeneration;
-        public int appearanceCount;
+        public int LowestGeneration;
+        public int HighestGeneration;
+        public int AppearanceCount;
+        public HashSet<string> ChildrenIds;
 
         public AncestorIndividual(string id)
         {
@@ -35,8 +37,10 @@ namespace Family_Traces
             FatherId = "";
             MotherId = "";
             SpouseId = "";
-            lowestGeneration = 0;
-            appearanceCount = 0;
+            LowestGeneration = 0;
+            HighestGeneration = 0;
+            AppearanceCount = 0;
+            ChildrenIds = new HashSet<string>();
         }
     }
 }

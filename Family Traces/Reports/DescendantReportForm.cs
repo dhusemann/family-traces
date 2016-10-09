@@ -42,7 +42,7 @@ namespace Family_Traces
             descendantCalc = new DescendantCalc(MaxDepth);
             descendantCalc.CalculateDescendants(IndividualId, UniqueDescendants);
             report.Clear();
-            Individual individual = new Individual();
+            Individualg individual = new Individualg();
 
             StringBuilder reportText = new StringBuilder();
             string birthDate, diedDate;
@@ -52,7 +52,7 @@ namespace Family_Traces
                 reportText.AppendLine("----------------");
                 for (int j = 0; j < descendantCalc.descendantList[i].Count; j++)
                 {
-                    individual = (Individual)(descendantCalc.descendantList[i][j]);
+                    individual = (Individualg)(descendantCalc.descendantList[i][j]);
 
                     if (individual.BirthDate == "")
                     {

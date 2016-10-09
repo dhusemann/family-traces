@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Family_Traces.Database;
+using Family_Traces.Models;
+using GedcomLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -27,18 +30,27 @@ namespace Family_Traces
                 loaded = true;
                 lblParsing.Text = "Parsing Gedcom...";
                 Application.DoEvents();
-                GedcomParserHashtable gedcomParser = new GedcomParserHashtable();
+                GedcomParser gedcomParser = new GedcomParser();
                 gedcomParser.Parse(Filename);
                 lblParsing.Text = "Parsing Gedcom complete.";
                 lblIndividuals.Text = "Parsed " + gedcomParser.gedcomIndividuals.Count.ToString() + " individuals...";
                 lblFamilies.Text = "Parsed " + gedcomParser.gedcomFamilies.Count.ToString() + " families...";
                 Application.DoEvents();
+                GedcomImporter.Import(gedcomParser);
 
-                AncestorList ancestorList = new AncestorList();
-                ancestorList.MaxDepth = 200;
-                ancestorList.CalcAncestorList("@I0145@", gedcomParser.gedcomIndividuals, gedcomParser.gedcomFamilies, @"C:\Temp\ancestry.docx");
-                lblIndividuals.Text = "Exporting completed";
-                butClose.Enabled = true;
+                Individual a = null;
+                using (var ctx = new FamilyTracesContext())
+                {
+                    a = ctx.Individuals.First();
+                }
+                    /*
+                    //Test code: TODO remove
+                    AncestorList ancestorList = new AncestorList();
+                    ancestorList.MaxDepth = 200;
+                    ancestorList.CalcAncestorList("@I7952@", gedcomParser.gedcomIndividuals, gedcomParser.gedcomFamilies, true, @"C:\Users\Serge.Meunier\Downloads\mine\ancestry.txt");
+                    lblIndividuals.Text = "Exporting completed";
+                    */
+                    butClose.Enabled = true;
             }
         }
 
@@ -54,24 +66,5 @@ namespace Family_Traces
             this.Close();
         }
 
-        private void lblFamilies_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblIndividuals_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblMain_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lblParsing_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

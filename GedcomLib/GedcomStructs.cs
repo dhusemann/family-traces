@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections.Generic;
 
-namespace Family_Traces
+namespace GedcomLib
 {
     public struct GedcomHeader
     {
@@ -36,7 +34,8 @@ namespace Family_Traces
         public string DiedCause;
         public string ParentFamilyId;
         public string SpouseFamilyId;
-        public ArrayList Notes;
+        public List<string> Notes;
+        public List<string> Sources;
 
         public GedcomIndividual(string id)
         {
@@ -56,7 +55,8 @@ namespace Family_Traces
             DiedCause = "";
             ParentFamilyId = "";
             SpouseFamilyId = "";
-            Notes = new ArrayList();
+            Notes = new List<string>();
+            Sources = new List<string>();
         }
     }
 
@@ -67,8 +67,9 @@ namespace Family_Traces
         public string WifeId;
         public string MarriageDate;
         public string MarriagePlace;
-        public ArrayList Children;
-        public ArrayList Notes;
+        public List<string> Children;
+        public List<string> Notes;
+        public List<string> Sources;
 
         public GedcomFamily(string id)
         {
@@ -77,8 +78,9 @@ namespace Family_Traces
             WifeId = "";
             MarriageDate = "";
             MarriagePlace = "";
-            Children = new ArrayList();
-            Notes = new ArrayList();
+            Children = new List<string>();
+            Notes = new List<string>();
+            Sources = new List<string>();
         }
     }
 
@@ -94,12 +96,25 @@ namespace Family_Traces
         }
     }
 
+    public struct GedcomSource
+    {
+        public string Id;
+        public string Text;
+
+        public GedcomSource(string id)
+        {
+            Id = id;
+            Text = "";
+        }
+    }
+
     public enum GedcomRecordEnum
     {
         None,
         Header,
         Individual,
         Family,
+        Source,
         Note
     }
 

@@ -55,7 +55,6 @@
             this.lblMain.Size = new System.Drawing.Size(243, 20);
             this.lblMain.TabIndex = 2;
             this.lblMain.Text = "Busy importing Gedcom file...";
-            this.lblMain.Click += new System.EventHandler(this.lblMain_Click);
             // 
             // lblIndividuals
             // 
@@ -65,7 +64,6 @@
             this.lblIndividuals.Size = new System.Drawing.Size(35, 13);
             this.lblIndividuals.TabIndex = 3;
             this.lblIndividuals.Text = "label2";
-            this.lblIndividuals.Click += new System.EventHandler(this.lblIndividuals_Click);
             // 
             // lblFamilies
             // 
@@ -75,7 +73,6 @@
             this.lblFamilies.Size = new System.Drawing.Size(35, 13);
             this.lblFamilies.TabIndex = 4;
             this.lblFamilies.Text = "label3";
-            this.lblFamilies.Click += new System.EventHandler(this.lblFamilies_Click);
             // 
             // lblParsing
             // 
@@ -85,7 +82,6 @@
             this.lblParsing.Size = new System.Drawing.Size(35, 13);
             this.lblParsing.TabIndex = 5;
             this.lblParsing.Text = "label2";
-            this.lblParsing.Click += new System.EventHandler(this.lblParsing_Click);
             // 
             // GedcomImportForm
             // 
