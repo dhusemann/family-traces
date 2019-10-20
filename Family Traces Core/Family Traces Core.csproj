@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>Family_Traces_Core</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>Family Traces</AssemblyName>
+    <RootNamespace>Family_Traces</RootNamespace>
+  
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\family traces\**\*.cs" />
+    <EmbeddedResource Include="..\family traces\**\*.resx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.3.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="3.0.0" />
+    <PackageReference Include="Mindbox.Data.Linq" Version="2.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GedcomLib\GedcomLib.csproj" />
+  </ItemGroup>
+
+</Project>
