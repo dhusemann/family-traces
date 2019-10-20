@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using System.IO;
 
 namespace Family_Traces
 {
@@ -38,14 +33,14 @@ namespace Family_Traces
 
             StringBuilder reportText = new StringBuilder();
 
-            for(int i = 0; i <= ancestorCalculation.GenerationCount; i++)
+            for (int i = 0; i <= ancestorCalculation.GenerationCount; i++)
             {
-                reportText.AppendLine("Generation " + (i+1).ToString());
+                reportText.AppendLine("Generation " + (i + 1).ToString());
                 reportText.AppendLine("----------------");
-                for(int j = 0; j < ancestorCalculation.ancestryList[i].Count; j++)
+                for (int j = 0; j < ancestorCalculation.ancestryList[i].Count; j++)
                 {
                     individual = (Individualg)(ancestorCalculation.ancestryList[i][j]);
-                   
+
 
                     reportText.AppendLine(GenValidation.GetNameWithDates(individual.Surname, individual.Firstname, individual.BirthDate, individual.DiedDate));
                 }

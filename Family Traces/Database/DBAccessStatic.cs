@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Data;
 using System.Data.OleDb;
-using System.Data;
-
 
 namespace Family_Traces
 {
@@ -24,7 +20,7 @@ namespace Family_Traces
             return retVal;
         }
 
-      
+
         //----------------------------------------------------------------------------------
         // Individuals
         //----------------------------------------------------------------------------------
@@ -72,7 +68,7 @@ namespace Family_Traces
 
             return ds;
         }
-        
+
         public static int InsertIndividual(string surname, string firstname, string bornDate, string bornPlace, string diedDate, string diedPlace, int parentFamilyId, string gender)
         {
             string sql = "INSERT INTO [Individual] ([Surname], [Firstname], [BornDate], [BornPlace], [DiedDate], [DiedPlace], [ParentFamilyId], [Gender]) VALUES ('" + surname.Trim() + "', '" + firstname.Trim() + "', '" + bornDate.Trim() + "', '" + bornPlace.Trim() + "', '" + diedDate.Trim() + "', '" + diedPlace.Trim() + "', " + parentFamilyId.ToString() + ", '" + gender.Trim() + "')";
@@ -175,7 +171,7 @@ namespace Family_Traces
             return ds;
         }
 
-        
+
         public static int InsertFamily(int husbandId, int wifeId, string marriageDate, string marriagePlace)
         {
             string sql = "INSERT INTO [Family] ([HusbandId], [WifeId], [MarriageDate], [MarriagePlace]) VALUES (" + husbandId.ToString() + ", " + wifeId.ToString() + ", '" + marriageDate.Trim() + "', '" + marriagePlace.Trim() + "')";

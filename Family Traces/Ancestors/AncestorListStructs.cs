@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace Family_Traces
 {
-
-
     public struct AncestorIndividual
     {
         public string Id;

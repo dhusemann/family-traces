@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Family_Traces
+﻿namespace Family_Traces
 {
     public class GenValidation
     {
@@ -43,6 +38,6 @@ namespace Family_Traces
             return firstname;
         }
 
-    
+
     }
 }

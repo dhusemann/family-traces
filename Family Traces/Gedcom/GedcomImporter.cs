@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Text;
-using GedcomLib;
+﻿using System.Collections;
+using System.Linq;
 using Family_Traces.Database;
 using Family_Traces.Models;
-using System.Linq;
+using GedcomLib;
 
 namespace Family_Traces
 {
@@ -23,12 +20,13 @@ namespace Family_Traces
                 ctx.Notes.RemoveRange(ctx.Notes);
                 ctx.SaveChanges();
 
-                foreach(GedcomNote gedcomNote in gedcomParser.gedcomNotes.Values)
+                foreach (GedcomNote gedcomNote in gedcomParser.gedcomNotes.Values)
                 {
-                    ctx.Notes.Add(new Note() {
-                                            Id = gedcomNote.Id,
-                                            Text = gedcomNote.Text
-                                        });
+                    ctx.Notes.Add(new Note()
+                    {
+                        Id = gedcomNote.Id,
+                        Text = gedcomNote.Text
+                    });
 
                 }
 
@@ -60,7 +58,7 @@ namespace Family_Traces
                         Prefix = gedcomIndividual.Prefix,
                         Suffix = gedcomIndividual.Suffix,
                         Surname = gedcomIndividual.Surname
-                        
+
                     });
 
                 }

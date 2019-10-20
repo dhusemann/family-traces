@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
 using System.Data;
 using System.IO;
 using GedcomLib;
@@ -35,7 +33,7 @@ namespace Family_Traces
             gedcomHeader.CharacterEncoding = "ANSEL";
             gedcomHeader.File = "";
             gedcomHeader.SourceVersion = "";
-            
+
             DataSet individuals = dbAccess.GetAllIndividuals();
             for (int i = 0; i < individuals.Tables[0].Rows.Count; i++)
             {
@@ -113,7 +111,7 @@ namespace Family_Traces
             GedcomFamily currentGedcomFamily;
 
             writer.WriteLine("0 HEAD");
-            if ((gedcomHeader.Source.Length > 0) || (gedcomHeader.SourceCorporation.Length)  > 0 || (gedcomHeader.SourceName.Length > 0))
+            if ((gedcomHeader.Source.Length > 0) || (gedcomHeader.SourceCorporation.Length) > 0 || (gedcomHeader.SourceName.Length > 0))
             {
                 writer.WriteLine("1 SOUR " + gedcomHeader.Source);
                 if (gedcomHeader.SourceVersion.Length > 0)

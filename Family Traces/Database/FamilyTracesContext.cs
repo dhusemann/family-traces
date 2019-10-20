@@ -1,10 +1,5 @@
-﻿using Family_Traces.Models;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using Family_Traces.Models;
 
 namespace Family_Traces.Database
 {

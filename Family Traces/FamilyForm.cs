@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Family_Traces
@@ -129,7 +125,7 @@ namespace Family_Traces
                     children.Tables[0].Rows[i]["BornDate"].ToString(),
                     children.Tables[0].Rows[i]["DiedDate"].ToString()});
             }
-                
+
         }
 
         private void ClearChildrenData()
@@ -195,7 +191,8 @@ namespace Family_Traces
                 LoadHusbandData(individual);
                 SetHusbandActive();
                 DataSet family = DBAccessStatic.GetFamilyForHusband(husbandId);
-                if (family.Tables[0].Rows.Count > 0) {
+                if (family.Tables[0].Rows.Count > 0)
+                {
                     familyId = (int)(family.Tables[0].Rows[familyIndex]["ID"]);
                     wifeId = (int)(family.Tables[0].Rows[familyIndex]["WifeId"]);
                     if (wifeId != -1)
@@ -205,7 +202,7 @@ namespace Family_Traces
                         LoadWifeData(wife);
                     }
                     LoadMarriageData(family, familyIndex);
-                    
+
                 }
                 else
                 {
@@ -504,7 +501,7 @@ namespace Family_Traces
             if (grdChildren[0, e.RowIndex].Value == null)
             {
                 MessageBox.Show("Please enter some information for the child before moving to their record");
-            } 
+            }
             else
             {
                 if (grdChildren[2, e.RowIndex].Value == null)
@@ -512,7 +509,7 @@ namespace Family_Traces
                     DBAccessStatic.UpdateIndividualGender((int)grdChildren[0, e.RowIndex].Value, "M");
                 }
                 LoadFamily((int)grdChildren[0, e.RowIndex].Value);
-                
+
             }
         }
 
@@ -705,10 +702,10 @@ namespace Family_Traces
                 descendantReportForm.MdiParent = this.MdiParent;
                 descendantReportForm.Show();
             }
-           descendantReportOptionsFrom.Dispose();
+            descendantReportOptionsFrom.Dispose();
 
         }
 
-   
+
     }
 }

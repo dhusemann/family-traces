@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace GedcomLib
@@ -24,7 +22,7 @@ namespace GedcomLib
         {
             StreamReader reader = new StreamReader(filename);
             string line = "";
-            char[] separators = new char[1] {' '};
+            char[] separators = new char[1] { ' ' };
             while (!reader.EndOfStream)
             {
                 line = reader.ReadLine().Replace("'", "''");
@@ -72,9 +70,11 @@ namespace GedcomLib
 
             if (lineArray[1] == "HEAD")
             {
-                    currentRecord = GedcomRecordEnum.Header;
-                    currentSubRecord = GedcomSubRecordEnum.None;
-            } else if (lineArray[1].IndexOf("@") >= 0) {
+                currentRecord = GedcomRecordEnum.Header;
+                currentSubRecord = GedcomSubRecordEnum.None;
+            }
+            else if (lineArray[1].IndexOf("@") >= 0)
+            {
                 switch (lineArray[2].Substring(0, 4))
                 {
                     case "INDI":

@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
-using System.Text;
-using System.Linq;
-using System.Data.Linq;
 using System.IO;
+using System.Linq;
 using GedcomLib;
 
 namespace Family_Traces
@@ -36,7 +33,7 @@ namespace Family_Traces
             else
             {
                 AncestorIndividual individual = new AncestorIndividual(individualId);
-                GedcomIndividual gedcomIndividual = gedcomIndividuals[individualId];
+                GedcomIndividual gedcomIndividual = this.gedcomIndividuals[individualId];
 
                 individual.GivenName = gedcomIndividual.GivenName.Trim();
                 individual.Surname = gedcomIndividual.Surname.Trim();
@@ -98,7 +95,7 @@ namespace Family_Traces
 
         private void OutputToFile(int startingDepth, bool oneLinePerPerson, string outputFile)
         {
-			StreamWriter writer = new StreamWriter(outputFile);
+            StreamWriter writer = new StreamWriter(outputFile);
 
 
             long total = 0;
@@ -107,7 +104,7 @@ namespace Family_Traces
             {
                 writer.WriteLine();
 
-				writer.WriteLine(string.Format("Generation {0} - {1}", depth, GetGenerationHeading(depth)));
+                writer.WriteLine(string.Format("Generation {0} - {1}", depth, GetGenerationHeading(depth)));
 
 
                 IEnumerable<KeyValuePair<string, AncestorIndividual>> individuals = ancestors.Where(x => x.Value.LowestGeneration == depth);
@@ -126,7 +123,7 @@ namespace Family_Traces
             writer.WriteLine(string.Format("Total non-unique ancestors: {0}", total));
 
             writer.Flush();
-			writer.Close();
+            writer.Close();
         }
 
         private void OutputIndividualText(string individualId, string spouseId, StreamWriter writer)
@@ -145,22 +142,22 @@ namespace Family_Traces
                 spouse = ancestors[spouseId];
 
             writer.WriteLine(GenerateFullName(individual, false));
-          
 
-            if (spouse.HasValue) 
+
+            if (spouse.HasValue)
             {
-               writer.WriteLine("     x " + GenerateFullName(spouse.Value, false));
-               
+                writer.WriteLine("     x " + GenerateFullName(spouse.Value, false));
+
             }
             if (father.HasValue)
             {
-				writer.WriteLine("     f. " + GenerateFullName(father.Value, false));
+                writer.WriteLine("     f. " + GenerateFullName(father.Value, false));
             }
             if (mother.HasValue)
             {
-				writer.WriteLine("     m. " + GenerateFullName(mother.Value, false));
-			}
-			writer.WriteLine();
+                writer.WriteLine("     m. " + GenerateFullName(mother.Value, false));
+            }
+            writer.WriteLine();
         }
 
         private void OutputIndividualTextOneLine(string individualId, StreamWriter writer)
@@ -195,21 +192,21 @@ namespace Family_Traces
                 name = string.Format("{0}", individual.GivenName);
             else
             {
-				if (individual.Suffix.Length > 0)
-				{
-					if (SurnameFirst)
-						name = string.Format("{2}, {0} ({1})", individual.GivenName, individual.Suffix, individual.Surname);
-					else
-						name = string.Format("{0} {2} ({1})", individual.GivenName, individual.Suffix, individual.Surname);
-				}
-				else
-				{
-					if (SurnameFirst)
-						name = string.Format("{1}, {0}", individual.GivenName, individual.Surname);
-					else
-						name = string.Format("{0} {1}", individual.GivenName, individual.Surname);
-				}
-			}
+                if (individual.Suffix.Length > 0)
+                {
+                    if (SurnameFirst)
+                        name = string.Format("{2}, {0} ({1})", individual.GivenName, individual.Suffix, individual.Surname);
+                    else
+                        name = string.Format("{0} {2} ({1})", individual.GivenName, individual.Suffix, individual.Surname);
+                }
+                else
+                {
+                    if (SurnameFirst)
+                        name = string.Format("{1}, {0}", individual.GivenName, individual.Surname);
+                    else
+                        name = string.Format("{0} {1}", individual.GivenName, individual.Surname);
+                }
+            }
 
             name = name + " " + GenerateBirthDeathDate(individual);
             name = name.Replace("  ", " ").Replace("  ", " ");

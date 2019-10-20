@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 using System.Collections;
+using System.Data;
+using System.Windows.Forms;
 
 namespace Family_Traces
 {
     public partial class IndexForm : Form
     {
         public int SelectedIndividualId = -1;
-        ArrayList individualIds = new ArrayList();
+        private ArrayList individualIds = new ArrayList();
 
         public IndexForm()
         {

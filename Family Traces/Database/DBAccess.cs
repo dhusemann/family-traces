@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data.OleDb;
 using System.Data;
-
+using System.Data.OleDb;
 
 namespace Family_Traces
 {
-    public class DBAccess
+    public class DBAccess : IDisposable
     {
         public static string connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=FamilyTraces.accdb";
 
@@ -218,7 +215,7 @@ namespace Family_Traces
             OleDbDataAdapter dbData = new OleDbDataAdapter(sql, dbConn);
             DataSet ds = new DataSet();
             dbData.Fill(ds);
- 
+
             return ds;
         }
 
@@ -231,10 +228,13 @@ namespace Family_Traces
 
             dbCommand.CommandText = "SELECT MAX(ID) FROM [FamilyChildren]";
             int individualId = (int)dbCommand.ExecuteScalar();
- 
+
             return individualId;
         }
 
-
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

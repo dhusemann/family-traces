@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
+﻿using System.Collections;
 using System.Data;
-using System.Data.OleDb;
 
 namespace Family_Traces
 {
@@ -53,7 +50,7 @@ namespace Family_Traces
     public class AncestorCalc
     {
         private int MaxDepth = 255;
-        
+
         public int GenerationCount = 0;
         public int IndividualCount = 0;
         public bool UniqueAncestors = true;
@@ -64,7 +61,7 @@ namespace Family_Traces
 
         private DBAccess dbAccess = new DBAccess();
 
-        
+
         public AncestorCalc()
         {
             for (int i = 0; i < 256; i++)
@@ -93,7 +90,7 @@ namespace Family_Traces
             IndividualCount = 0;
             UniqueAncestors = uniqueAncestors;
             GenerateAncestryFamilyList(initialIndividualId, 0);
-            
+
             dbAccess.Close();
 
         }

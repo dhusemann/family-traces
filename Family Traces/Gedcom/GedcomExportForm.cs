@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Family_Traces
 {
     public partial class GedcomExportForm : Form
     {
-        string Filename = "";
-        bool loaded = false;
+        private string Filename = "";
+        private bool loaded = false;
 
         public GedcomExportForm(string filename)
         {

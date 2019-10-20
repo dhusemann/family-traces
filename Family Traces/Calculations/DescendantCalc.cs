@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Data;
-using System.Text;
-using System.Collections;
 
 namespace Family_Traces
 {
     public class DescendantCalc
     {
-                private int MaxDepth = 255;
-        
+        private int MaxDepth = 255;
+
         public int GenerationCount = 0;
         public int IndividualCount = 0;
         public bool UniqueDescendants = true;
@@ -20,7 +17,7 @@ namespace Family_Traces
 
         private DBAccess dbAccess = new DBAccess();
 
-        
+
         public DescendantCalc()
         {
             for (int i = 0; i < 256; i++)
@@ -49,7 +46,7 @@ namespace Family_Traces
             IndividualCount = 0;
             UniqueDescendants = uniqueDescendants;
             GenerateDescendantsFamilyList(initialIndividualId, 0);
-            
+
             dbAccess.Close();
 
         }
@@ -83,7 +80,8 @@ namespace Family_Traces
                     if (depth < MaxDepth)
                     {
                         DataSet familyDS = dbAccess.GetFamilyByPerson(individualId);
-                        for(int i = 0; i < familyDS.Tables[0].Rows.Count; i++){
+                        for (int i = 0; i < familyDS.Tables[0].Rows.Count; i++)
+                        {
                             int familyId = (int)(familyDS.Tables[0].Rows[i]["ID"]);
 
                             int husbandId = (int)(familyDS.Tables[0].Rows[i]["HusbandId"]);

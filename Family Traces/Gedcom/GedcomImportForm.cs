@@ -1,14 +1,9 @@
-﻿using Family_Traces.Database;
+﻿using System;
+using System.Linq;
+using System.Windows.Forms;
+using Family_Traces.Database;
 using Family_Traces.Models;
 using GedcomLib;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 
 namespace Family_Traces
 {
@@ -43,14 +38,14 @@ namespace Family_Traces
                 {
                     a = ctx.Individuals.First();
                 }
-                    /*
-                    //Test code: TODO remove
-                    AncestorList ancestorList = new AncestorList();
-                    ancestorList.MaxDepth = 200;
-                    ancestorList.CalcAncestorList("@I7952@", gedcomParser.gedcomIndividuals, gedcomParser.gedcomFamilies, true, @"C:\Users\Serge.Meunier\Downloads\mine\ancestry.txt");
-                    lblIndividuals.Text = "Exporting completed";
-                    */
-                    butClose.Enabled = true;
+                /*
+                //Test code: TODO remove
+                AncestorList ancestorList = new AncestorList();
+                ancestorList.MaxDepth = 200;
+                ancestorList.CalcAncestorList("@I7952@", gedcomParser.gedcomIndividuals, gedcomParser.gedcomFamilies, true, @"C:\Users\Serge.Meunier\Downloads\mine\ancestry.txt");
+                lblIndividuals.Text = "Exporting completed";
+                */
+                butClose.Enabled = true;
             }
         }
 
